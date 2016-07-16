@@ -1,0 +1,58 @@
+/* Leandro Silva | Grafluxe */
+
+#pylint-panel {
+    background-color: #eee;
+    font-size: 14px;
+    -webkit-user-select: initial;
+}
+
+#pylint-top {
+    background: linear-gradient(to bottom, #a6a6a6 50%, #a0a0a0 50%);
+    padding: 7px 15px;
+    color: #fff;
+    font-weight: bold;
+}
+
+#pylint-close-btn {
+    float: right;
+    color: #fff;
+    font-size: 20px;
+    padding: 0 5px;
+    text-decoration: none;
+}
+
+#pylint-close-btn:hover {
+    font-weight: bold;
+}
+
+#pylint-body {
+    background-color: #f6f6f6;
+    overflow: auto;
+    height: calc(100% - 30px);
+    font-family: "SourceCodePro-Medium", ＭＳ ゴシック, "MS Gothic", monospace;
+    font-size: 13px;
+}
+
+#pylint-body > ul {
+    list-style: none;
+    margin: 0;
+}
+
+#pylint-body > ul > li > a {
+    margin: 0;
+    padding: 5px 15px;
+    width: calc(100% - 30px);
+    display: inline-block;
+    color: #333;
+    cursor: default;
+}
+
+#pylint-body > ul > li > a:hover {
+    color: #000;
+    text-decoration: none;
+    background-color: #fff;
+}
+
+#pylint-body > ul > li:nth-child(even) {
+    background-color: #ececec;
+}
