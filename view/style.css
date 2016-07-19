@@ -6,6 +6,11 @@
     -webkit-user-select: initial;
 }
 
+#pylint-panel a {
+    text-decoration: none;
+    cursor: default;
+}
+
 #pylint-top {
     background: linear-gradient(to bottom, #a6a6a6 50%, #a0a0a0 50%);
     padding: 7px 15px;
@@ -13,11 +18,16 @@
     font-weight: bold;
 }
 
+#pylint-top > div {
+    display: inline-block;
+    width: calc(100% - 50px);
+}
+
 #pylint-close-btn {
     float: right;
     color: #fff;
     font-size: 20px;
-    padding: 0 5px;
+    padding: 0 10px;
     text-decoration: none;
 }
 
@@ -38,21 +48,48 @@
     margin: 0;
 }
 
-#pylint-body > ul > li > a {
-    margin: 0;
-    padding: 5px 15px;
-    width: calc(100% - 30px);
-    display: inline-block;
-    color: #333;
-    cursor: default;
+#pylint-body > ul > li {
+    position: relative;
 }
 
-#pylint-body > ul > li > a:hover {
+#pylint-body > ul > li > .pylint-err {
+    margin: 0;
+    padding: 5px 30px 5px 15px;
+    width: calc(100% - 45px);
+    display: inline-block;
+    color: #333;
+}
+
+#pylint-body > ul > li > .pylint-err:hover {
     color: #000;
-    text-decoration: none;
     background-color: #fff;
 }
 
 #pylint-body > ul > li:nth-child(even) {
     background-color: #ececec;
+}
+
+#pylint-body > ul > li > .pylint-more {
+     position: absolute;
+    top: 50%;
+    right: 7px;
+    margin-top: -6px;
+    background-color: #c6c6c6;
+    text-align: center;
+    border-radius: 15px;
+    width: 15px;
+    height: 15px;
+}
+
+#pylint-body > ul > li > .pylint-more > span {
+    color: #fff;
+    font-size: 10px;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: -2px;
+    display: block;
+}
+
+#pylint-body > ul > li > .pylint-more:hover {
+    background-color: #777;
 }
