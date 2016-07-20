@@ -8,7 +8,7 @@
 define((require, exports, module) => {
     "use strict";
 
-    var AppInit = brackets.getModule("utils/AppInit"),
+    let AppInit = brackets.getModule("utils/AppInit"),
         DocumentManager,
         EditorManager,
         Dialogs,
@@ -41,7 +41,7 @@ define((require, exports, module) => {
           DEFAULT_OUTPUT_PATTERN = "{msg_id} > {msg} [{symbol} @ {line},{column}]";
 
     AppInit.appReady(() => {
-        var MainViewManager = brackets.getModule("view/MainViewManager");
+        let MainViewManager = brackets.getModule("view/MainViewManager");
 
         DocumentManager = brackets.getModule("document/DocumentManager");
 
@@ -49,7 +49,7 @@ define((require, exports, module) => {
     });
 
     fileChange = () => {
-        var currDoc = DocumentManager.getCurrentDocument();
+        let currDoc = DocumentManager.getCurrentDocument();
 
         if (panel) {
             panel.hide();
@@ -84,7 +84,7 @@ define((require, exports, module) => {
     };
 
     setup = () => {
-        var NodeDomain = brackets.getModule("utils/NodeDomain"),
+        let NodeDomain = brackets.getModule("utils/NodeDomain"),
             ExtensionUtils = brackets.getModule("utils/ExtensionUtils");
 
         ExtensionUtils.loadStyleSheet(module, "view/style.css");
@@ -95,7 +95,7 @@ define((require, exports, module) => {
     };
 
     definePrefs = () => {
-        var PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
+        let PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
             prefs = PreferencesManager.getExtensionPrefs("pylinter");
 
         pythonPath = prefs.get("pythonPath");
@@ -113,7 +113,7 @@ define((require, exports, module) => {
     };
 
     createPanel = () => {
-        var WorkspaceManager = brackets.getModule("view/WorkspaceManager");
+        let WorkspaceManager = brackets.getModule("view/WorkspaceManager");
 
         panel = WorkspaceManager.createBottomPanel("pylint-panel", $(require("text!view/panel.html")), 144);
 
@@ -125,14 +125,9 @@ define((require, exports, module) => {
     };
 
     onLintComplete = (e, msg) => {
-        var html,
-            issueCount;
-
-        console.log("Xxx");
+        let html;
 
         if (msg) {
-            console.log(msg.substr(0, 200), "...");
-
             parsed = parseOutput(msg);
             html = "<ul>";
 
@@ -142,9 +137,7 @@ define((require, exports, module) => {
 
             html += "</ul>";
 
-            issueCount = parsed.out.length;
-
-            $panelFilename.text(parsed.name + ` (${issueCount} issue${issueCount > 1 ? "s" : ""})`);
+            $panelFilename.text(parsed.name + ` (${parsed.issueCount} issue${parsed.issueCount > 1 ? "s" : ""})`);
             $panelBody.html(html);
 
             setClickListeners();
@@ -168,7 +161,7 @@ define((require, exports, module) => {
     };
 
     onLintMsg = (e, msg) => {
-        var [, title, info, desc] = msg.match(/:(.+): \*(.+)\*([\s\S]+)/);
+        let [, title, info, desc] = msg.match(/:(.+): \*(.+)\*([\s\S]+)/);
 
         Dialogs.showModalDialog(
             null,
@@ -178,13 +171,12 @@ define((require, exports, module) => {
     };
 
     parseOutput = (input) => {
-        var name = input.match(/^\** .* (.*)$/m)[1],
+        let name = input.match(/^\** .* (.*)$/m)[1],
             out,
             splt;
 
-        out = input.split(/\n/);
+        out = input.replace(/^\D.+\n/mg, "").split(/\n/);
 
-        out.shift();
         out.pop();
 
         out = out.map((el, i) => {
@@ -200,13 +192,14 @@ define((require, exports, module) => {
 
         return {
             name,
-            out
+            out,
+            issueCount: out.length
         };
     };
 
     setClickListeners = () => {
         $panelBody.find(".pylint-err").click((e) => {
-            var indx = e.currentTarget.dataset.pylintEl,
+            let indx = e.currentTarget.dataset.pylintEl,
                 el = parsed.out[indx];
 
             e.preventDefault();
