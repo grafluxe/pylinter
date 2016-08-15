@@ -34,10 +34,10 @@ define((require, exports, module) => {
         $panelBody,
         $panelCloseBtn,
         lastFileWasPy,
-        pythonPath,
+        pylintPath,
         outputPattern;
 
-    const DEFAULT_PYLINT_PATH = "/usr/spltal/bin/pylint",
+    const DEFAULT_PYLINT_PATH = (navigator.platform.includes("Mac") ? "/usr/local/bin/pylint" : "path\\to\\pylint"),
           DEFAULT_OUTPUT_PATTERN = "{msg_id} > {msg} [{symbol} @ {line},{column}]";
 
     AppInit.appReady(() => {
@@ -98,12 +98,12 @@ define((require, exports, module) => {
         let PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
             prefs = PreferencesManager.getExtensionPrefs("pylinter");
 
-        pythonPath = prefs.get("pythonPath");
+        pylintPath = prefs.get("pylintPath");
         outputPattern = prefs.get("outputPattern");
 
-        if (!pythonPath) {
-            pythonPath = DEFAULT_PYLINT_PATH;
-            prefs.set("pythonPath", pythonPath);
+        if (!pylintPath) {
+            pylintPath = DEFAULT_PYLINT_PATH;
+            prefs.set("pylintPath", pylintPath);
         }
 
         if (!outputPattern) {
@@ -132,7 +132,7 @@ define((require, exports, module) => {
             html = "<ul>";
 
             parsed.out.forEach(function (el, i) {
-                html += `<li><a href="#" data-pylint-el="${i}" class="pylint-err">${el.txt}</a><a href="#" data-pylint-id="${el.msgId}" class="pylint-more"><span>?</span></a></li>`;
+                html += `<li><a href="#" data-pylint-el="${i}" class="pylint-err">${el.txt}</a><a href="#" data-pylint-id="${el.msgId}" class="pylint-more"></a></li>`;
             });
 
             html += "</ul>";
@@ -154,19 +154,19 @@ define((require, exports, module) => {
         Dialogs.showModalDialog(
             null,
             "Pylinter",
-            "<b>Pylint can't be found!</b><br>Please confirm you have Pylint installed and that the property 'pylinter.pythonPath' in your Brackets preference file is correct. Once you edit your preference file, please restart Brackets."
+            "<b>Pylint can't be found!</b><br>Please confirm you have Pylint installed and that the property 'pylinter.pylintPath' in your Brackets preference file is correct. Once you edit your preference file, please restart Brackets."
         );
 
         console.error("[Pylinter] Node Error: ", err);
     };
 
     onLintMsg = (e, msg) => {
-        let [, title, info, desc] = msg.match(/:(.+): \*(.+)\*([\s\S]+)/);
+        let [, title, info, desc] = msg.match(/:(.+):(\s\*.+\*)?([\s|\S]+)/);
 
         Dialogs.showModalDialog(
             null,
             "Pylinter",
-            `<h4>${title}</h4><p>${info}</p><p>${desc}</p>`
+            `<h4>${title}</h4><p>${info || ""}</p><p>${desc}</p>`
         );
     };
 
@@ -175,7 +175,7 @@ define((require, exports, module) => {
             out,
             splt;
 
-        out = input.replace(/^\D.+\n/mg, "").split(/\n/);
+        out = input.replace(/\r\n/g, "\n").replace(/^\D.+\n/mg, "").split(/\n/);
 
         out.pop();
 
@@ -211,12 +211,12 @@ define((require, exports, module) => {
         $panelBody.find(".pylint-more").click((e) => {
             e.preventDefault();
 
-            nodeDomain.exec("getMsg", pythonPath, e.currentTarget.dataset.pylintId);
+            nodeDomain.exec("getMsg", pylintPath, e.currentTarget.dataset.pylintId);
         });
     };
 
     execNode = () => {
-        nodeDomain.exec("lintIt", pythonPath, DocumentManager.getCurrentDocument().file.fullPath, outputPattern);
+        nodeDomain.exec("lintIt", pylintPath, DocumentManager.getCurrentDocument().file.fullPath, outputPattern);
     };
 
     clean = () => {
