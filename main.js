@@ -115,7 +115,7 @@ define((require, exports, module) => {
     createPanel = () => {
         let WorkspaceManager = brackets.getModule("view/WorkspaceManager");
 
-        panel = WorkspaceManager.createBottomPanel("pylint-panel", $(require("text!view/panel.html")), 144);
+        panel = WorkspaceManager.createBottomPanel("pylint-panel", $(require("text!view/panel.html")), 62);
 
         $panelFilename = $("#pylint-filename");
         $panelBody = $("#pylint-body");
@@ -180,7 +180,7 @@ define((require, exports, module) => {
         out.pop();
 
         out = out.map((el, i) => {
-            splt = el.match(/^(-?\d+),(-?\d+);(.+)\?/);
+            splt = el.match(/^(-?\d+),(-?\d+);(.+?)\?/);
 
             return {
                 txt: $("<p>" + el.substr(el.indexOf("?") + 1) + "</p>").text(),
