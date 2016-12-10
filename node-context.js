@@ -1,73 +1,73 @@
 /**
- * @author Leandro Silva | Grafluxe
+ * @author Leandro Silva | Grafluxe, 2016
  */
 
-(function () {
-    "use strict";
+(function() {
+  "use strict";
 
-    var init,
-        lintIt,
-        getMsg,
+  var init,
+      lintIt,
+      getMsg,
 
-        spawn = require("child_process").spawn,
-        domainMgr;
+      spawn = require("child_process").spawn,
+      domainMgr;
 
-    init = function (domainManager) {
-        domainMgr = domainManager;
+  init = function(domainManager) {
+    domainMgr = domainManager;
 
-        if (!domainMgr.hasDomain("nodeLogic")) {
-            domainMgr.registerDomain("nodeLogic", {
-                major: 0,
-                minor: 1
-            });
-        }
+    if (!domainMgr.hasDomain("nodeLogic")) {
+      domainMgr.registerDomain("nodeLogic", {
+        major: 0,
+        minor: 1
+      });
+    }
 
-        domainMgr.registerCommand(
-            "nodeLogic", //domain name
-            "lintIt", //command name
-            lintIt //command handler function
-        );
+    domainMgr.registerCommand(
+      "nodeLogic", //domain name
+      "lintIt", //command name
+      lintIt //command handler function
+    );
 
-        domainMgr.registerCommand(
-            "nodeLogic",
-            "getMsg",
-            getMsg
-        );
+    domainMgr.registerCommand(
+      "nodeLogic",
+      "getMsg",
+      getMsg
+    );
 
-        domainMgr.registerEvent("nodeLogic", "lintComplete");
-        domainMgr.registerEvent("nodeLogic", "lintFail");
-        domainMgr.registerEvent("nodeLogic", "lintMsg");
-    };
+    domainMgr.registerEvent("nodeLogic", "lintComplete");
+    domainMgr.registerEvent("nodeLogic", "lintFail");
+    domainMgr.registerEvent("nodeLogic", "lintMsg");
+  };
 
-    lintIt = function (pylintPath, filePath, pattern) {
-        var cmd = spawn(pylintPath, ["-rn", "--msg-template='{line},{column};{msg_id}?" + pattern + "'", filePath]),
-            out;
+  lintIt = function(pylintPath, filePath, pattern) {
+    var cmd = spawn(pylintPath, ["-rn", "--msg-template='{line},{column};{msg_id}?" + pattern + "'", filePath]),
+        out;
 
-        cmd.once("error", function (err) {
-            domainMgr.emitEvent("nodeLogic", "lintFail", err);
-        });
+    cmd.once("error", function(err) {
+      domainMgr.emitEvent("nodeLogic", "lintFail", err);
+    });
 
-        cmd.stdout.once("data", function (data) {
-            out = data.toString();
-        });
+    cmd.stdout.once("data", function(data) {
+      out = data.toString();
+    });
 
-        cmd.once("close", function () {
-            domainMgr.emitEvent("nodeLogic", "lintComplete", out);
-        });
-    };
+    cmd.once("close", function() {
+      domainMgr.emitEvent("nodeLogic", "lintComplete", out);
+    });
+  };
 
-    getMsg = function (pylintPath, id) {
-        var cmd = spawn(pylintPath, ["--help-msg=" + id]);
+  getMsg = function(pylintPath, id) {
+    var cmd = spawn(pylintPath, ["--help-msg=" + id]);
 
-        cmd.once("error", function (err) {
-            domainMgr.emitEvent("nodeLogic", "lintFail", err);
-        });
+    cmd.once("error", function(err) {
+      domainMgr.emitEvent("nodeLogic", "lintFail", err);
+    });
 
-        cmd.stdout.once("data", function (data) {
-            domainMgr.emitEvent("nodeLogic", "lintMsg", data.toString());
-        });
-    };
+    cmd.stdout.once("data", function(data) {
+      domainMgr.emitEvent("nodeLogic", "lintMsg", data.toString());
+    });
+  };
 
-    //
-    exports.init = init;
+  //
+  exports.init = init;
 }());

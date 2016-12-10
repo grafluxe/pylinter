@@ -1,24 +1,24 @@
 {
-    "name": "gx.pylinter",
-    "title": "Pylinter",
-    "description": "Lints Python code on save (with Pylint).",
-    "author": "Leandro Silva (http://grafluxe.com)",
-    "homepage": "http://grafluxe.com",
-    "version": "1.0.0",
-    "categories": "linting",
-    "license": "MIT",
-    "engines": {
-        "brackets": ">=1.0.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://bitbucket.org/grafluxe/pylinter"
-    },
-    "keywords": [
-        "pylint",
-        "python",
-        "lint",
-        "linter",
-        "Python linter"
-    ]
+  "name": "grafluxe.pylinter",
+  "title": "Pylinter",
+  "description": "Lints Python code on save (with Pylint). This extension works like JSLint, but for Python.",
+  "author": "Leandro Silva (http://grafluxe.com)",
+  "homepage": "https://github.com/Grafluxe/pylinter",
+  "version": "1.0.0",
+  "categories": "linting",
+  "license": "MIT",
+  "engines": {
+    "brackets": ">=1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Grafluxe/pylinter.git"
+  },
+  "keywords": [
+    "pylint",
+    "python",
+    "lint",
+    "linter",
+    "Python linter"
+  ]
 }
