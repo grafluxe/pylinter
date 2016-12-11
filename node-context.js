@@ -24,14 +24,16 @@
 
     domainMgr.registerCommand(
       "nodeLogic", //domain name
-      "lintIt", //command name
-      lintIt //command handler function
+      "lintIt",    //command name
+      lintIt,      //command handler function
+      false        //this command is synchronous in Node
     );
 
     domainMgr.registerCommand(
       "nodeLogic",
       "getMsg",
-      getMsg
+      getMsg,
+      false
     );
 
     domainMgr.registerEvent("nodeLogic", "lintComplete");
