@@ -9,36 +9,45 @@ define((require, exports, module) => {
   "use strict";
 
   let AppInit = brackets.getModule("utils/AppInit"),
-    DocumentManager,
-    EditorManager,
-    Dialogs,
+      DocumentManager,
+      EditorManager,
+      Dialogs,
+      ran,
+      nodeDomain,
+      panel,
+      parsed,
+      editor,
+      $panelFilename,
+      $panelBody,
+      $panelCloseBtn,
+      lastFileWasPy,
+      pylintPath,
+      outputPattern,
 
-    fileChange,
-    setup,
-    definePrefs,
-    createPanel,
-    parseOutput,
-    setClickListeners,
-    onLintComplete,
-    onLintFail,
-    onLintMsg,
-    execNode,
-    clean,
-
-    ran,
-    nodeDomain,
-    panel,
-    parsed,
-    editor,
-    $panelFilename,
-    $panelBody,
-    $panelCloseBtn,
-    lastFileWasPy,
-    pylintPath,
-    outputPattern;
+      init,
+      fileChange,
+      setup,
+      definePrefs,
+      createPanel,
+      parseOutput,
+      setClickListeners,
+      onLintComplete,
+      onLintFail,
+      onLintMsg,
+      execNode,
+      clean;
 
   const DEFAULT_PYLINT_PATH = (navigator.platform.includes("Mac") ? "/usr/local/bin/pylint" : "path\\to\\pylint"),
         DEFAULT_OUTPUT_PATTERN = "{msg_id} > {msg} [{symbol} @ {line},{column}]";
+
+  init = () => {
+    let MainViewManager = brackets.getModule("view/MainViewManager");
+
+    DocumentManager = brackets.getModule("document/DocumentManager");
+
+    MainViewManager.on("currentFileChange", fileChange);
+    fileChange();
+  };
 
   fileChange = () => {
     let currDoc = DocumentManager.getCurrentDocument();
@@ -223,12 +232,5 @@ define((require, exports, module) => {
     DocumentManager.off("documentSaved", execNode);
   };
 
-  AppInit.appReady(() => {
-    let MainViewManager = brackets.getModule("view/MainViewManager");
-
-    DocumentManager = brackets.getModule("document/DocumentManager");
-
-    MainViewManager.on("currentFileChange", fileChange);
-    fileChange();
-  });
+  AppInit.appReady(init);
 });
