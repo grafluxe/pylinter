@@ -40,14 +40,6 @@ define((require, exports, module) => {
   const DEFAULT_PYLINT_PATH = (navigator.platform.includes("Mac") ? "/usr/local/bin/pylint" : "path\\to\\pylint"),
         DEFAULT_OUTPUT_PATTERN = "{msg_id} > {msg} [{symbol} @ {line},{column}]";
 
-  AppInit.appReady(() => {
-    let MainViewManager = brackets.getModule("view/MainViewManager");
-
-    DocumentManager = brackets.getModule("document/DocumentManager");
-
-    MainViewManager.on("currentFileChange", fileChange);
-  });
-
   fileChange = () => {
     let currDoc = DocumentManager.getCurrentDocument();
 
@@ -230,4 +222,13 @@ define((require, exports, module) => {
 
     DocumentManager.off("documentSaved", execNode);
   };
+
+  AppInit.appReady(() => {
+    let MainViewManager = brackets.getModule("view/MainViewManager");
+
+    DocumentManager = brackets.getModule("document/DocumentManager");
+
+    MainViewManager.on("currentFileChange", fileChange);
+    fileChange();
+  });
 });
