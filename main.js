@@ -12,19 +12,7 @@ define((require, exports, module) => {
       DocumentManager,
       EditorManager,
       Dialogs,
-      ran,
-      nodeDomain,
-      panel,
-      parsed,
-      editor,
-      $panelFilename,
-      $panelBody,
-      $panelCloseBtn,
-      lastFileWasPy,
-      pylintPath,
-      outputPattern,
 
-      init,
       fileChange,
       setup,
       definePrefs,
@@ -35,7 +23,20 @@ define((require, exports, module) => {
       onLintFail,
       onLintMsg,
       execNode,
-      clean;
+      clean,
+
+      init,
+      ran,
+      nodeDomain,
+      panel,
+      parsed,
+      editor,
+      $panelTitle,
+      $panelCloseBtn,
+      $panelBody,
+      lastFileWasPy,
+      pylintPath,
+      outputPattern;
 
   const DEFAULT_PYLINT_PATH = (navigator.platform.includes("Mac") ? "/usr/local/bin/pylint" : "path\\to\\pylint"),
         DEFAULT_OUTPUT_PATTERN = "{msg_id} > {msg} [{symbol} @ {line},{column}]";
@@ -116,11 +117,11 @@ define((require, exports, module) => {
   createPanel = () => {
     let WorkspaceManager = brackets.getModule("view/WorkspaceManager");
 
-    panel = WorkspaceManager.createBottomPanel("pylint-panel", $(require("text!view/panel.html")), 62);
+    panel = WorkspaceManager.createBottomPanel("pylint-panel", $(require("text!view/panel.html")), 55);
 
-    $panelFilename = $("#pylint-filename");
+    $panelTitle = $("#pylint-panel > .toolbar > .title");
+    $panelCloseBtn = $("#pylint-panel > .toolbar > .close");
     $panelBody = $("#pylint-body");
-    $panelCloseBtn = $("#pylint-close-btn");
 
     $panelCloseBtn.click(() => panel.hide());
   };
@@ -130,22 +131,26 @@ define((require, exports, module) => {
 
     if (msg) {
       parsed = parseOutput(msg);
-      html = "<ul>";
+      html = "";
 
-      parsed.out.forEach(function(el, i) {
-        html += `<li><a href="#" data-pylint-el="${i}" class="pylint-err">${el.txt}</a><a href="#" data-pylint-id="${el.msgId}" class="pylint-more"></a></li>`;
+      parsed.out.forEach((el, i) => {
+        html += `
+          <tr data-pylint-el="${i}" class="pylint-line">
+            <td class="line-number">${el.line + 1}</td>
+            <td class="line-text">${el.txt}</td>
+            <td><a href="#" data-pylint-id="${el.msgId}" class="pylint-more"></a></td>
+          </tr>
+        `;
       });
 
-      html += "</ul>";
-
-      $panelFilename.text(parsed.name + ` (${parsed.issueCount} issue${parsed.issueCount > 1 ? "s" : ""})`);
+      $panelTitle.text(`${parsed.issueCount} Pylint Problem${parsed.issueCount > 1 ? "s" : ""}`);
       $panelBody.html(html);
 
       setClickListeners();
 
       panel.show();
     } else {
-      $panelFilename.text("");
+      $panelTitle.text("0 Pylint Problems");
       $panelBody.find("a").off("click").html("No Issues");
       panel.hide();
     }
@@ -172,8 +177,7 @@ define((require, exports, module) => {
   };
 
   parseOutput = (input) => {
-    let name = input.match(/^\** .* (.*)$/m)[1],
-        out,
+    let out,
         splt;
 
     out = input.replace(/\r\n/g, "\n").replace(/^\D.+\n/mg, "").split(/\n/);
@@ -192,14 +196,13 @@ define((require, exports, module) => {
     });
 
     return {
-      name,
       out,
       issueCount: out.length
     };
   };
 
   setClickListeners = () => {
-    $panelBody.find(".pylint-err").click((e) => {
+    $panelBody.find(".pylint-line").click((e) => {
       let indx = e.currentTarget.dataset.pylintEl,
           el = parsed.out[indx];
 

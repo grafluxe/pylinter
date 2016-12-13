@@ -7,7 +7,6 @@ A Python linter for Brackets. This extension lints Python code on save (with Pyl
 ## Features
 
 - Automatically lints on file open and file save.
-- Displays file name and issue counter.
 - Configurable lint message [output pattern](#configure).
 - Resizable window pane.
 - Closable window pane (will stay closed until the file is re-saved).
