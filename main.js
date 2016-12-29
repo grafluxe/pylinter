@@ -1,9 +1,10 @@
 /**
  * @author Leandro Silva | Grafluxe, 2016
+ * @license MIT
  */
 
 /*global define, brackets, $ */
-/*jshint unused:false */
+//jshint esversion:6, browser:true, devel:true
 
 define((require, exports, module) => {
   "use strict";

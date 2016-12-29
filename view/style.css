@@ -6,6 +6,7 @@
 
 #pylint-body > tr > td.line-text {
   padding-right: 15px;
+  -webkit-user-select: initial;
 }
 
 #pylint-body > tr > td > .pylint-more {

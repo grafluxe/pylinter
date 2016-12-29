@@ -1,6 +1,9 @@
 /**
  * @author Leandro Silva | Grafluxe, 2016
+ * @license MIT
  */
+
+//jshint node:true
 
 (function() {
   "use strict";

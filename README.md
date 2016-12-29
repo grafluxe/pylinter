@@ -1,6 +1,6 @@
 # Pylinter
 
-A Python linter for Brackets. This extension lints Python code on save (with Pylint). It works like JSLint, but for Python.
+A Python linter for Adobe Brackets. This extension lints Python code on save (with Pylint). It works like JSLint, but for Python.
 
 ![Screenshot](./screenshot.jpg)
 
@@ -36,6 +36,28 @@ Pylinter comes with two preference options.
     - To further customize the output pattern, use formats specified [here](https://pylint.readthedocs.io/en/latest/user_guide/output.html).
 - pylinter.pylintPath:
     - The path to your Pylint install.
+
+## Changelog
+
+**1.3.0**
+
+- Enable selection on panel text.
+
+**1.2.0**
+
+- Update logic and view to match default Brackets linter panel.
+  - It now looks and feels like a native Brackets extension.
+- Update screenshot to reflect redesign.
+- Clean up main module.
+
+**1.0.1**
+
+- Check for method existence before adding listener.
+  - Removes error that occurs on first run after install.
+
+**1.0.0**
+
+- Initial release.
 
 ## License
 
